@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>天密書苑｜2026 中秋猜燈謎</title>
+    <style>
+      :root {
+        --red: #bc493f;
+        --deep: #24345e;
+        --ink: #5b4335;
+        --cream: #fffaf0;
+        --gold: #f2c96b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #101b3d;
+      }
+      body {
+        font-family:
+          "Arial Rounded MT Bold", "Microsoft JhengHei", "PingFang TC",
+          "Noto Sans TC", sans-serif;
+        color: var(--ink);
+      }
+      button {
+        font: inherit;
+      }
+      .page {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        background: #101b3d;
+      }
+      .stage {
+        position: relative;
+        width: 100%;
+        max-width: 1920px;
+        aspect-ratio: 1664/928;
+        min-height: 720px;
+        overflow: hidden;
+        background: url("tianmi_midautumn_game_bg.png") center top / 100% 100%
+          no-repeat;
+      }
+
+      /* ===== top title ===== */
+      .hero-copy {
+        position: absolute;
+        z-index: 4;
+        top: 4.2%;
+        left: 22%;
+        width: 56%;
+        text-align: center;
+        color: white;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45em;
+        padding: 0.45em 1.15em;
+        border-radius: 999px;
+        background: rgba(19, 31, 68, 0.65);
+        border: 1px solid rgba(255, 226, 150, 0.56);
+        box-shadow: 0 7px 24px rgba(0, 0, 0, 0.18);
+        color: #fff2c7;
+        font-size: clamp(13px, 1.05vw, 19px);
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+      .title {
+        margin: 0.12em 0 0.03em;
+        font-family:
+          "Arial Rounded MT Bold", "Microsoft JhengHei", "PingFang TC",
+          "Noto Sans TC", sans-serif;
+        font-size: clamp(38px, 4.7vw, 82px);
+        font-weight: 1000;
+        letter-spacing: 0.08em;
+        color: #fff4c9;
+        text-shadow:
+          0 3px 0 rgba(124, 76, 32, 0.75),
+          0 0 12px rgba(255, 225, 138, 0.72),
+          0 8px 28px rgba(0, 0, 0, 0.24);
+      }
+      .subtitle {
+        margin: 0.35em 0 0;
+        font-size: clamp(14px, 1.25vw, 22px);
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        color: #fff9e9;
+        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      /* ===== board lives inside the blank cream area ===== */
+      .board-wrap {
+        position: absolute;
+        z-index: 5;
+        left: 7.4%;
+        right: 7.4%;
+        top: 38.5%;
+        bottom: 8.3%;
+        display: flex;
+        flex-direction: column;
+      }
+      .board-head {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+        padding: 0 4px;
+      }
+      .board-note {
+        font-size: clamp(13px, 0.95vw, 18px);
+        font-weight: 900;
+        color: #8c633d;
+        letter-spacing: 0.04em;
+      }
+      .board-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .mini-btn {
+        border: 0;
+        cursor: pointer;
+        padding: 0.52em 0.9em;
+        border-radius: 999px;
+        background: rgba(255, 251, 236, 0.9);
+        color: #755139;
+        font-size: clamp(12px, 0.82vw, 16px);
+        font-weight: 900;
+        box-shadow: 0 4px 12px rgba(111, 70, 34, 0.11);
+        transition: 0.18s;
+      }
+      .mini-btn:hover {
+        transform: translateY(-2px);
+        background: #ffe5a0;
+      }
+
+      .board {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        grid-template-rows: repeat(6, minmax(0, 1fr));
+        gap: clamp(7px, 0.72vw, 14px);
+      }
+      .riddle {
+        position: relative;
+        border: 0;
+        border-radius: 24px;
+        cursor: pointer;
+        overflow: hidden;
+        padding: 6px 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        color: #5b3b2b;
+        box-shadow:
+          0 7px 13px rgba(113, 69, 35, 0.12),
+          inset 0 0 18px rgba(255, 255, 255, 0.45);
+        transition: 0.18s ease;
+      }
+      .riddle:nth-child(4n + 1) {
+        background: linear-gradient(180deg, #fff0a8, #ffd16d);
+      }
+      .riddle:nth-child(4n + 2) {
+        background: linear-gradient(180deg, #ffe4d0, #ffba89);
+      }
+      .riddle:nth-child(4n + 3) {
+        background: linear-gradient(180deg, #ffe0df, #ff9e9a);
+      }
+      .riddle:nth-child(4n) {
+        background: linear-gradient(180deg, #ffefbf, #ffc77b);
+      }
+      .riddle:before {
+        content: "";
+        position: absolute;
+        left: 12%;
+        right: 12%;
+        top: 9px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.55);
+      }
+      .riddle:hover {
+        transform: translateY(-4px) scale(1.025);
+        box-shadow:
+          0 10px 18px rgba(103, 61, 30, 0.18),
+          0 0 18px rgba(255, 193, 77, 0.23),
+          inset 0 0 18px rgba(255, 255, 255, 0.55);
+      }
+      .num {
+        display: block;
+        line-height: 1;
+        font-size: clamp(25px, 2.15vw, 42px);
+        font-weight: 1000;
+        color: var(--red);
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+      }
+      .type {
+        margin-top: 0.34em;
+        padding: 0.28em 0.68em;
+        border-radius: 999px;
+        background: rgba(255, 252, 240, 0.88);
+        font-size: clamp(10px, 0.78vw, 15px);
+        line-height: 1;
+        font-weight: 1000;
+        white-space: nowrap;
+        box-shadow: 0 2px 5px rgba(87, 52, 28, 0.07);
+      }
+      .riddle.done {
+        opacity: 0.54;
+        filter: saturate(0.5);
+      }
+      .riddle.done .num:after {
+        content: " ✓";
+        color: #4b8a5f;
+        font-size: 0.55em;
+      }
+
+      /* ===== modal ===== */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        padding: 24px;
+        align-items: center;
+        justify-content: center;
+        background: rgba(8, 16, 39, 0.76);
+        backdrop-filter: blur(7px);
+      }
+      .modal.show {
+        display: flex;
+      }
+      .card {
+        position: relative;
+        width: min(1040px, 95vw);
+        min-height: min(610px, 88vh);
+        padding: 54px 62px 44px;
+        border-radius: 38px;
+        background:
+          radial-gradient(
+            circle at 88% 12%,
+            rgba(255, 221, 127, 0.26),
+            transparent 18%
+          ),
+          linear-gradient(180deg, #fffdf7, #fff3d2);
+        border: 2px solid rgba(220, 171, 78, 0.34);
+        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.38);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .card:before {
+        content: "🌕";
+        position: absolute;
+        right: 30px;
+        top: 15px;
+        font-size: 105px;
+        opacity: 0.11;
+      }
+      .close {
+        position: absolute;
+        right: 22px;
+        top: 20px;
+        width: 45px;
+        height: 45px;
+        border: 0;
+        border-radius: 50%;
+        cursor: pointer;
+        background: #f2dfaf;
+        color: #674932;
+        font-size: 25px;
+        font-weight: 900;
+      }
+      .badge {
+        align-self: flex-start;
+        padding: 9px 16px;
+        border-radius: 999px;
+        background: var(--deep);
+        color: #fff4d2;
+        font-size: 16px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+      }
+      .question {
+        margin: 32px auto 12px;
+        max-width: 880px;
+        text-align: center;
+        font-size: clamp(34px, 4.3vw, 58px);
+        line-height: 1.55;
+        font-weight: 1000;
+        color: #46394c;
+      }
+      .answer {
+        display: none;
+        width: min(800px, 100%);
+        margin: 26px auto 0;
+        padding: 24px 28px;
+        text-align: center;
+        border: 2px dashed #d69e46;
+        border-radius: 23px;
+        background: linear-gradient(#fff5ca, #ffe5a0);
+      }
+      .answer.show {
+        display: block;
+        animation: pop 0.18s ease-out;
+      }
+      .answer-label {
+        font-size: 14px;
+        font-weight: 900;
+        color: #9d693a;
+      }
+      .answer-text {
+        margin-top: 5px;
+        font-size: clamp(28px, 3.7vw, 43px);
+        line-height: 1.4;
+        font-weight: 1000;
+        color: #b84439;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 27px;
+      }
+      .actions button {
+        flex: 1;
+        min-width: 160px;
+        border: 0;
+        cursor: pointer;
+        padding: 15px 17px;
+        border-radius: 16px;
+        font-size: 17px;
+        font-weight: 1000;
+        color: #fff;
+        box-shadow: 0 6px 13px rgba(80, 51, 35, 0.12);
+      }
+      .reveal {
+        background: linear-gradient(#e06c5e, #c75247);
+      }
+      .mark {
+        background: linear-gradient(#82a985, #648b69);
+      }
+      .random {
+        background: linear-gradient(#3a4e83, #283864);
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* ===== compact viewport ===== */
+      @media (max-width: 1100px) {
+        .stage {
+          min-width: 1100px;
+          min-height: 614px;
+        }
+        .page {
+          overflow-x: auto;
+          justify-content: flex-start;
+        }
+      }
+    </style>
+
+    <style id="projector-fix">
+      /* ===== Desktop projector only ===== */
+      html,
+      body {
+        width: 100%;
+        min-width: 1440px;
+        min-height: 900px;
+        overflow-x: auto;
+      }
+      .page {
+        width: 100%;
+        min-width: 1440px;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+      .stage {
+        width: 100vw;
+        height: 100vh;
+        max-width: none;
+        min-width: 1440px;
+        min-height: 803px;
+        aspect-ratio: 1664/928;
+      }
+
+      /* leave a little more breathing room above/below the 46 cards */
+      .board-wrap {
+        left: 7.2%;
+        right: 7.2%;
+        top: 39.2%;
+        bottom: 9.4%;
+      }
+
+      .board-head {
+        margin-bottom: 8px;
+      }
+
+      .board {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        grid-template-rows: repeat(6, minmax(0, 1fr));
+        gap: 12px 14px;
+      }
+
+      /* fixed sizing prevents number/text overflow */
+      .riddle {
+        min-height: 0;
+        height: 100%;
+        border-radius: 22px;
+        padding: 4px 6px 5px;
+      }
+
+      .num {
+        font-size: clamp(30px, 1.82vw, 36px);
+        line-height: 0.92;
+        margin: 0;
+      }
+
+      .type {
+        margin-top: 7px;
+        padding: 4px 10px;
+        font-size: clamp(11px, 0.72vw, 14px);
+        line-height: 1;
+      }
+
+      /* top controls slightly tighter */
+      .board-note {
+        font-size: clamp(13px, 0.9vw, 17px);
+      }
+      .mini-btn {
+        font-size: clamp(12px, 0.78vw, 15px);
+        padding: 0.48em 0.85em;
+      }
+
+      /* no mobile/tablet reflow at all */
+      @media (max-width: 1100px) {
+        .stage {
+          min-width: 1440px;
+          min-height: 803px;
+        }
+        .page {
+          min-width: 1440px;
+          overflow: hidden;
+        }
+      }
+    </style>
+
+    <style id="remove-riddle-before">
+      .riddle:before {
+        display: none !important;
+        content: none !important;
+      }
+    </style>
+
+    <style id="auto-flow-30">
+      /* ===== 30題：表頭 / 彈性內容 / footer 分離背景 ===== */
+      html,
+      body {
+        margin: 0;
+        min-width: 1280px;
+        min-height: 100%;
+        overflow-x: auto;
+        background: #f9efd8;
+      }
+
+      .page {
+        width: 100%;
+        min-width: 1280px;
+        min-height: 100vh;
+        display: block;
+        overflow: visible;
+        background: #f9efd8;
+      }
+
+      .stage {
+        position: relative;
+        width: 100%;
+        max-width: none;
+        min-width: 1280px;
+        min-height: 100vh;
+        height: auto;
+        aspect-ratio: auto;
+        overflow: visible;
+        background: #f9efd8;
+        padding: 0;
+      }
+
+      /* top image keeps its own proportions and never stretches */
+      .stage::before {
+        content: "";
+        display: block;
+        width: 100%;
+        aspect-ratio: 1912 / 505;
+        background: url("tianmi_midautumn_game_top.png") center top / 100% 100%
+          no-repeat;
+      }
+
+      .hero-copy {
+        top: clamp(42px, 4.2vw, 82px);
+      }
+
+      /* flexible content area */
+      .board-wrap {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        bottom: auto;
+        width: min(86%, 1560px);
+        margin: 0 auto;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+        margin-top: -5%;
+      }
+
+      .board-head {
+        margin-bottom: 16px;
+      }
+
+      .board {
+        flex: none;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-rows: none;
+        gap: 18px;
+      }
+
+      .riddle {
+        height: 125px;
+        min-height: 125px;
+        padding: 14px 14px 13px;
+        border-radius: 24px;
+        overflow: hidden;
+        justify-content: flex-start;
+      }
+
+      .riddle:before {
+        display: none !important;
+        content: none !important;
+      }
+
+      .num {
+        flex: 0 0 auto;
+        margin-top: 0;
+        font-size: 40px;
+        line-height: 1;
+      }
+
+      .type {
+        flex: 0 0 auto;
+        margin-top: 8px;
+        padding: 5px 11px;
+        font-size: 14px;
+      }
+
+      .question-mini {
+        display: -webkit-box;
+        margin-top: 10px;
+        padding: 0 4px;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.42;
+        font-weight: 800;
+        color: #6a4b38;
+        text-wrap: balance;
+      }
+
+      .riddle:hover .question-mini {
+        color: #513626;
+      }
+
+      /* footer image stays natural and follows the content */
+      .scene-footer {
+        width: 100%;
+        aspect-ratio: 1912 / 505;
+        background: url("tianmi_midautumn_game_footer.png") center bottom / 100%
+          100% no-repeat;
+        pointer-events: none;
+        margin-top: -10%;
+      }
+
+      @media (max-width: 1400px) {
+        .page,
+        .stage {
+          min-width: 1280px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <main class="stage">
+        <section class="hero-copy">
+          <div class="eyebrow">🌕 天密書苑・中秋限定 🐰</div>
+          <h1 class="title">猜燈謎大會</h1>
+          <p class="subtitle">選一盞喜歡的燈籠，看看今天能不能一猜就中！</p>
+        </section>
+
+        <section class="board-wrap">
+          <div class="board-head">
+            <div class="board-note">
+              🏮 點選題號開始猜謎｜已猜過的題目會淡化
+            </div>
+            <div class="board-actions">
+              <button class="mini-btn" id="randomTop">🎲 隨機一題</button>
+              <button class="mini-btn" id="reset">↻ 清除紀錄</button>
+            </div>
+          </div>
+          <div class="board" id="board"></div>
+        </section>
+        <div class="scene-footer" aria-hidden="true"></div>
+      </main>
+    </div>
+
+    <div class="modal" id="modal">
+      <div class="card">
+        <button class="close" id="close" aria-label="關閉">×</button>
+        <div class="badge" id="badge"></div>
+        <div class="question" id="question"></div>
+        <div class="answer" id="answer">
+          <div class="answer-label">答案是</div>
+          <div class="answer-text" id="answerText"></div>
+        </div>
+        <div class="actions">
+          <button class="reveal" id="reveal">🌟 揭曉答案</button>
+          <button class="mark" id="mark">✓ 標記已猜</button>
+          <button class="random" id="random">🎲 隨機一題</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const riddles = [
+        [
+          1,
+          "嘴像小鏟子，腳像小扇子，走路左右擺，不是擺架子。",
+          "猜成語",
+          "鴨子",
+        ],
+        [2, "神的交通工具是什麼?", "腦筋急轉彎", "寶貝(神奇寶貝)"],
+        [3, "平日不思，中秋想它，有圓有方，甜甜蜜蜜", "猜吃的", "月餅"],
+        [4, "圓圓骨架薄薄皮，肚裡點火亮堂堂，中秋夜裡人人提", "猜物品", "燈籠"],
+        [5, "小時穿黑衣，長大換綠袍，水裡過日子，岸上來睡覺", "猜動物", "青蛙"],
+        [
+          6,
+          "長得像根竹，有紫也有綠，周身都是節，吃生不吃熟。",
+          "猜水果",
+          "甘蔗",
+        ],
+        [
+          7,
+          "白天草叢待，夜晚提燈來，不吃油和電，閃閃放光彩",
+          "猜動物",
+          "螢火蟲",
+        ],
+        [8, "阿拉丁有幾個哥哥？", "腦筋急轉彎", "三個(阿拉甲、阿拉乙、阿拉丙)"],
+        [9, "一隻熊朝你走過來", "猜成語", "有備而來（有「bear」來）"],
+        [
+          10,
+          "沒有尾巴的熊叫無尾熊，很難溝通的熊叫什麼熊？",
+          "猜台語",
+          "拍餐熊",
+        ],
+        [11, "雙火雙水", "猜地名", "淡水"],
+        [12, "四分五裂", "猜地名", "九份"],
+        [13, "雨後春筍", "猜地名", "新竹"],
+        [14, "脫了紅袍子‚是個白胖子‚去了白胖子‚是個黑圓子。", "猜水果", "荔枝"],
+        [15, "兩好球三壞球", "猜地名", "南投（難投）"],
+        [
+          16,
+          "1 2 3 4 5 6 7 8 9 哪個數字最懶惰，哪個數字最勤勞？",
+          "猜俗語",
+          "1跟2(1不做2不休)",
+        ],
+        [17, "汽車會飛", "猜食物", "咖啡（「Car」飛）"],
+        [18, "超人保護地球，誰保護城市?", "腦筋急轉彎", "螢幕保護程式"],
+        [19, "它似水般清，卻比水更輕，把它放入水，馬上見分明", "猜物品", "油"],
+        [20, "家住大海，早上岸來；太陽一曬，越曬越白", "猜物品", "鹽"],
+        [21, "身體長長，兄弟成雙；只會吃菜，不會喝湯", "猜物品", "筷子"],
+        [22, "一朵花兒手中拿，日曬雨淋也用它", "猜物品", "雨傘"],
+        [23, "小時穿青襖，大時披紅袍，老了換件紫外套。", "猜水果", "桑葚"],
+        [24, "牛奶、羊奶...那大象的奶叫什麼？", "台語", "象奶(橡皮筋)"],
+        [25, "為什麼壞事只能中午做?", "腦筋急轉彎", "因為早晚會有報應"],
+        [26, "為什麽蠶寶寶很有錢？", "腦筋急轉彎", "因為他會結繭（節儉）"],
+        [
+          27,
+          "猴子不喜歡什麽線？",
+          "腦筋急轉彎",
+          "平行線，因為沒有相交（香蕉）",
+        ],
+        [
+          28,
+          "狼、老虎和獅子一起玩遊戲，誰會被淘汰？",
+          "腦筋急轉彎",
+          "狼，因為桃太郎（淘汰狼）",
+        ],
+        [29, "今天的活動名稱", "活動題", "天密書苑・2026團圓有愛・幸福常在"],
+        [30, "這個地方叫做什麼名字?", "活動題", "天密書苑or天密堂"],
+      ];
+
+      const board = document.getElementById("board");
+      const modal = document.getElementById("modal");
+      const badge = document.getElementById("badge");
+      const question = document.getElementById("question");
+      const answer = document.getElementById("answer");
+      const answerText = document.getElementById("answerText");
+      const reveal = document.getElementById("reveal");
+      const mark = document.getElementById("mark");
+
+      let current = null;
+      let done = new Set(
+        JSON.parse(localStorage.getItem("tm-riddle-done-v3") || "[]"),
+      );
+
+      function shortType(type) {
+        const map = {
+          猜一個字: "猜字",
+          猜成語: "猜成語",
+          猜物品: "猜物品",
+          猜吃的: "猜吃的",
+          猜動物: "猜動物",
+          猜地名: "猜地名",
+          猜食物: "猜食物",
+          猜水果: "猜水果",
+          猜台語: "猜台語",
+          猜俗語: "猜俗語",
+          台語: "台語",
+          腦筋急轉彎: "急轉彎",
+          活動題: "活動題",
+        };
+        return map[type] || type;
+      }
+
+      function render() {
+        board.innerHTML = "";
+        riddles.forEach((r) => {
+          const btn = document.createElement("button");
+          btn.className = "riddle" + (done.has(r[0]) ? " done" : "");
+          btn.innerHTML = `<span class="num">${String(r[0]).padStart(2, "0")}</span><span class="type">${shortType(r[2])}</span><span class="question-mini">${r[1]}</span>`;
+          btn.onclick = () => openRiddle(r);
+          board.appendChild(btn);
+        });
+      }
+
+      function openRiddle(r) {
+        current = r;
+        badge.textContent = `第 ${r[0]} 題・${r[2]}`;
+        question.textContent = r[1];
+        answerText.textContent = r[3];
+        answer.classList.remove("show");
+        reveal.textContent = "🌟 揭曉答案";
+        mark.textContent = done.has(r[0]) ? "↩ 取消已猜" : "✓ 標記已猜";
+        modal.classList.add("show");
+      }
+
+      function randomRiddle() {
+        const remain = riddles.filter((r) => !done.has(r[0]));
+        const pool = remain.length ? remain : riddles;
+        openRiddle(pool[Math.floor(Math.random() * pool.length)]);
+      }
+
+      document.getElementById("close").onclick = () =>
+        modal.classList.remove("show");
+      modal.onclick = (e) => {
+        if (e.target === modal) modal.classList.remove("show");
+      };
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") modal.classList.remove("show");
+      });
+
+      reveal.onclick = () => {
+        answer.classList.toggle("show");
+        reveal.textContent = answer.classList.contains("show")
+          ? "🙈 收起答案"
+          : "🌟 揭曉答案";
+      };
+
+      mark.onclick = () => {
+        if (!current) return;
+        if (done.has(current[0])) done.delete(current[0]);
+        else done.add(current[0]);
+        localStorage.setItem("tm-riddle-done-v3", JSON.stringify([...done]));
+        mark.textContent = done.has(current[0]) ? "↩ 取消已猜" : "✓ 標記已猜";
+        render();
+      };
+
+      document.getElementById("random").onclick = randomRiddle;
+      document.getElementById("randomTop").onclick = randomRiddle;
+      document.getElementById("reset").onclick = () => {
+        if (confirm("要清除所有已猜紀錄嗎？")) {
+          done.clear();
+          localStorage.removeItem("tm-riddle-done-v3");
+          render();
+        }
+      };
+
+      render();
+    </script>
+  </body>
+</html>
